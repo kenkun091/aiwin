@@ -10,3 +10,12 @@
 [submodule "packages/foundry/lib/erc6551"]
 	path = packages/foundry/lib/erc6551
 	url = https://github.com/erc6551/reference
+[submodule "packages/foundry/lib/protocol-periphery"]
+	path = packages/foundry/lib/protocol-periphery
+	url = https://github.com/storyprotocol/protocol-periphery
+[submodule "packages/foundry/lib/protocol-core"]
+	path = packages/foundry/lib/protocol-core
+	url = https://github.com/storyprotocol/protocol-core
+[submodule "packages/foundry/lib/openzeppelin-contracts-upgradeable"]
+	path = packages/foundry/lib/openzeppelin-contracts-upgradeable
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable

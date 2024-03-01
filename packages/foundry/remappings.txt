@@ -1,1 +1,4 @@
-@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts
+@openzeppelin/openzeppelin-contracts/=lib/openzeppelin-contracts
+@openzeppelin/contracts-upgradeable/=lib/openzeppelin-contracts-upgradeable/contracts
+@story-protocol/protocol-core/=lib/protocol-core
+@story-protocol/protocol-periphery/=lib/protocol-periphery
