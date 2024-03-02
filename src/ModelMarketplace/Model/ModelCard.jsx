@@ -1,5 +1,7 @@
 const { href } = VM.require("devhub.near/widget/core.lib.url");
 
+// return JSON.stringify(props);
+
 if (!href) {
   return <></>;
 }
@@ -61,24 +63,22 @@ const Actions = styled.div`
   align-items: center;
   gap: 12px;
 `;
-const AgentCard = ({ item, editFunction }) => {
-  const { accountId, name, displayName, prompt, logoUrl } = item;
-  const agentComponent = item.component ? item.component : `${REPL_ACCOUNT}/widget/AI.Agent.AgentChat`;
+const ModelCard = ({ item }) => {
+  const {accountId, name,  modelOwnerAddress, modelName, modelDescription, modelLogo: logoUrl, tokenId } = item;
+  const agentComponent = `${REPL_ACCOUNT}/widget/ModelMarketplace.Model.AgentChat`;
   const imageUrl =
     logoUrl ?? "https://ipfs.near.social/ipfs/bafkreibysr2mkwhb4j36h2t7mqwhynqdy4vzjfygfkfg65kuspd2bawauu";
   const chatLink = href({
     widgetSrc: agentComponent,
-    params: { src: `${accountId}/agent/${name}` },
+    params: { src: `${accountId}/agent/${name}`, tokenId },
   });
   const detailsLink = href({
-    widgetSrc: `${REPL_ACCOUNT}/widget/AI.Agent.AgentDetails`,
-    params: { src: `${accountId}/agent/${name}` },
+    widgetSrc: `${REPL_ACCOUNT}/widget/ModelMarketplace.Model.AgentDetails`,
+    params: { src: `${accountId}/agent/${name}`, tokenId },
   });
 
   const agentChatUrl = `https://${REPL_NEAR_URL}/${agentComponent}?src=${accountId}/agent/${item.name}`;
   const editType = accountId === context.accountId ? "edit" : "fork";
-  const editLabel = editType === "edit" ? "Edit" : "Fork";
-  const editIcon = editType === "edit" ? "ph-bold ph-pencil-simple" : "ph-bold ph-git-fork";
 
   return (
     <Card>
@@ -89,37 +89,19 @@ const AgentCard = ({ item, editFunction }) => {
           </div>
 
           <div className="col">
-            <h3>{displayName}</h3>
+            <h3>{modelName}</h3>
             <p>by {accountId}</p>
             <Widget
               src="near/widget/DIG.Tooltip"
               props={{
-                content: <span style={{ whiteSpace: "pre-line" }}>{prompt}</span>,
-                trigger: <p>{prompt ? prompt.substring(0, 20) : ""}...</p>,
+                content: <span style={{ whiteSpace: "pre-line" }}>{modelDescription}</span>,
+                trigger: <p>{modelDescription ? modelDescription.substring(0, 20) : ""}...</p>,
               }}
             />
           </div>
         </div>
       </Link>
       <Actions>
-        <Widget
-          src="near/widget/DIG.Tooltip"
-          props={{
-            content: editLabel,
-            trigger: (
-              <Widget
-                src="near/widget/DIG.Button"
-                props={{
-                  onClick: () => editFunction(item),
-                  iconLeft: editIcon,
-                  variant: "secondary",
-                  fill: "ghost",
-                  size: "small",
-                }}
-              />
-            ),
-          }}
-        />
         <Widget
           src="${REPL_ACCOUNT}/widget/CopyUrlButton"
           props={{
@@ -155,7 +137,7 @@ const AgentCard = ({ item, editFunction }) => {
         <Widget
           src="near/widget/DIG.Tooltip"
           props={{
-            content: "Use agent",
+            content: "Use Model",
             trigger: (
               <Link to={chatLink} style={{ all: "unset" }}>
                 <Widget
@@ -176,4 +158,4 @@ const AgentCard = ({ item, editFunction }) => {
   );
 };
 
-return AgentCard(props);
+return ModelCard(props);

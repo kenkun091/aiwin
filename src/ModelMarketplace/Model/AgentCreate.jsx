@@ -79,7 +79,7 @@ const AgentInputsPartialSchema = {
     inputProps: {
       min: 2,
       max: 255,
-      placeholder: "The component used to run the agent, default is near/widget/AI.Agent.AgentChat",
+      placeholder: "The component used to run the agent, default is near/widget/ModelMarketplace.Model.AgentChat",
       required: false,
     },
     label: "Component",

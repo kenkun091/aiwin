@@ -1,13 +1,26 @@
-if (!props.agent) return "";
+if (!props.model) return "";
 const { href } = VM.require("devhub.near/widget/core.lib.url");
 if (!href) {
   return <></>;
 }
 
-const { agent, showActions } = props;
-const { accountId, name, displayName, prompt, logoUrl, tags, component } = agent;
+const { model, showActions } = props;
+const { accountId, name, ipInfo, nftInfo } = model
+console.log(ipInfo, "show meeee")
+const { id: ipAddress } = ipInfo
+const { modelOwnerAddress, modelName, modelDescription, modelLogo: logoUrl, modelWeightUri, finetuneDataHash, finetunedModelHash } = nftInfo;
 
-const agentComponent = item.component ? item.component : `${REPL_ACCOUNT}/widget/AI.Agent.AgentChat`;
+const storyIPDashboardLink = "https://explorer.storyprotocol.xyz/ipa/" + ipAddress;
+const modelWeightsLink = "https://ipfs.io/ipfs/" + modelWeightUri.slice(6, modelWeightUri.length);
+
+function shortenEthAddress(address, length) {
+  if (address.length <= length * 2) {
+    return address;
+  }
+  return `${address.slice(0, length)}...${address.slice(-length)}`;
+}
+
+const agentComponent = `${REPL_ACCOUNT}/widget/ModelMarketplace.Model.AgentChat`;
 const chatLink = href({
   widgetSrc: agentComponent,
   params: { src: `${accountId}/agent/${name}` },
@@ -149,6 +162,32 @@ const Text = styled.p`
   }
 `;
 
+const TextLink = styled("Link")`
+  display: block;
+  margin: 0;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  font-size: 14px;
+  white-space: nowrap;
+  outline: none;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+
+  &:focus,
+  &:hover {
+    text-decoration: underline;
+  }
+
+  i {
+    color: #7e868c;
+    margin-right: 8px;
+  }
+`;
+const mintLicense = () => {
+
+};
+
 return (
   <Wrapper>
     <Header size={size}>
@@ -164,9 +203,29 @@ return (
       </Thumbnail>
 
       <div>
-        <Title size={size}>{displayName}</Title>
-        <Text ellipsis>{name}</Text>
-        <Text ellipsis>by {accountId}</Text>
+        <Title size={size}>{modelName}</Title>
+        <Text ellipsis>by {shortenEthAddress(modelOwnerAddress, 6)}</Text>
+        <TextLink
+          href={storyIPDashboardLink}
+        >
+          View On StoryProtocol Dashboard
+        </TextLink>
+
+        <TextLink
+          href={modelWeightsLink}
+        >Download Model Weights</TextLink>
+        <Widget
+          src="near/widget/DIG.Button"
+          props={{
+            onClick: mintLicense,
+            iconLeft: editIcon,
+            variant: "affirmative",
+            fill: "solid",
+            size: "large",
+            label: "Mint License",
+          }}
+        />
+
       </div>
     </Header>
 
@@ -183,28 +242,6 @@ return (
 
     {showActions && (
       <Actions>
-        {false && accountId === context.accountId && (
-          <Widget
-            src="near/widget/DIG.Tooltip"
-            props={{
-              content: "Edit",
-              trigger: (
-                <Widget
-                  src="near/widget/DIG.Button"
-                  props={{
-                    label: "Delete",
-                    disabled: !context.accountId || context.accountId !== accountId,
-                    // onClick: () => delete(agent.name),
-                    iconLeft: "ph-bold ph-trash",
-                    variant: "destructive",
-                    fill: "ghost",
-                    size: "small",
-                  }}
-                />
-              ),
-            }}
-          />
-        )}
         <Widget
           src="${REPL_ACCOUNT}/widget/CopyUrlButton"
           props={{

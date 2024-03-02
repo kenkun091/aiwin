@@ -1,0 +1,34 @@
+{
+  "model_name": "distilBert-sentiment-classifier",
+  "model_description": "The distilBert-sentiment-classifier is a streamlined AI model that leverages the distilled version of the BERT (Bidirectional Encoder Representations from Transformers) architecture to perform sentiment analysis. Designed for efficiency and speed, it classifies texts into sentiment categories such as positive, negative, and neutral with a high degree of accuracy. This model is particularly useful for analyzing customer feedback, social media posts, and product reviews, enabling businesses and researchers to gauge public sentiment and insights quickly.",
+  "python_requirements":
+  {
+    "python": "3.9.13",
+    "requirements":
+    {
+      "accelerate": "0.27.2",
+      "pytorch": "1.12.1",
+      "transformers": "4.38.2",
+      "datasets": "2.17.1",
+      "huggingface-hub": "0.21.3",
+      "numpy": "1.23.4",
+      "pandas": "1.5.2",
+      "tokenizers": "0.15.2",
+      "torch": "2.2.0",
+      "tqdm": "4.66.2"
+    }
+  },
+  "finetuning_parameters": {
+    "batch_size": 8,
+    "learning_rate": 5e-5,
+    "num_epochs": 3,
+    "random_seed": 42
+  },
+  "finetune_data_hash": "36bbafbde8fc67c03221f17face0e64136cb04d059a3d6936e35fcda6891ce02",
+  "finetuned_model_hash": "dd2a7a30f0822b2d5d6a4b1ead1ceafea2cc15867fc3650b7f5348e64f3818e0",
+  "finetuned_from": "0x91CfC8d11E02723F7335D00ec60A9d309ef30773",
+  "model_weight_uri": "ipfs://QmNuTrsbCTQFoWcMqHtnoBa8N8SStiqmEn5VSqrC3tq1no",
+  "model_logo": "https://aeiljuispo.cloudimg.io/v7/https://cdn-uploads.huggingface.co/production/uploads/5f0c746619cb630495b814fd/j26aNEdiOgptZxJ6akGCC.png?w=200&h=200&f=face",
+  "model_owner_address": "0x91CfC8d11E02723F7335D00ec60A9d309ef30772",
+  "licenses_used": ["0x77884dba9e5634d81200407ff2ade32105eb223f", "0x1cb3643e57b92c73a5fe605238f35c99255d7223", "0xde0074aab377732a05f7cde4898773f8b5e447aa", "0xa246f31c6b1cc53ee54d478df7c0998267e7f33b", "0x06b87a9613fd1265914763068a96387310439e25", "0x50cf1d628d42eebaedde720c0a1585abaf297d7f", "0xde0533f0b2158f169eef1a1a6130e3f95e3083a8", "0x395038ea04d8f76ff2d6ba90b918b8351db6252d", "0xf3f60f86e63db856118b2ca5e66ef26365d1d03d"]
+}
