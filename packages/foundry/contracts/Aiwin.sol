@@ -30,7 +30,7 @@ contract Aiwin is ERC721URIStorage {
     }
 
     function mintAI(string memory name, string memory tokenURI, bytes memory licencesUsed, uint256 policyId, bytes32 hash) public {
-        _safeMint(msg.sender, tokenID, licencesUsed);
+        _safeMint(msg.sender, tokenID);
         _setTokenURI(tokenID, tokenURI);
         // Metadata.Attribute[] memory attributes = new Metadata.Attribute[](1);
         // attributes[0] = Metadata.Attribute({key: "copyrightType", value: "MLmodel"});
@@ -41,7 +41,7 @@ contract Aiwin is ERC721URIStorage {
         //     customMetadata: attributes
         // });
 
-        address ipId = registerationModule.registerRootIp(policyId, address(this), tokenID, name, hash, tokenURI);
+        //address ipId = registerationModule.registerRootIp(policyId, address(this), tokenID, name, hash, tokenURI);
         tokenID += 1;
     }
 }
