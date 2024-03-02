@@ -3,6 +3,7 @@
 Lineage.ai empowers the Web3 and AI community by facilitating content and IP creation and data tracking
 
 ## The Problem
+Large Language Models (LLMs) trained by big corporations are trained on large amount of data from the internet. It is more likely than not that some data/content is IP protected and the IP holders are not properly compensated. At the same time, it is nearly impossible for people outside the corporations to check whether certain data is used towards training and argue for IP rights.
 
 ## Our Solution
 
