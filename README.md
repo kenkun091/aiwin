@@ -1,4 +1,5 @@
 # Lineage.ai
+Vercel app: https://lineage-ai.vercel.app/
 
 Lineage.ai empowers the Web3 and AI community by facilitating content and IP creation and data tracking
 
