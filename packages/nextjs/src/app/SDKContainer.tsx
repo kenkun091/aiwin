@@ -15,7 +15,7 @@ import {
   send_personal_sign,
 } from '@/app/SignHelpers';
 import NftCreator from "./components/nft-creator";
-import contract from "./abi/LLModels.json";
+import contract from "./abi/contract-abi.json";
 import ContentCreator from "./components/content-creator";
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
@@ -349,7 +349,7 @@ export default function SDKContainer() {
             </div>
           ) : (
             <>
-              <button className={"button-normal"} style={{ padding: 10, margin: 10 }} onClick={connectAndSign}>
+              <button className={"cd "} style={{ padding: 10, margin: 10 }} onClick={connectAndSign}>
                 Connect w/ Sign
               </button>
             </>
@@ -359,25 +359,27 @@ export default function SDKContainer() {
         <div style={{ float: "right"}}>
           Powered by 
           <div style={{ padding: "10px"}}>
-          <Image
-            src="/Story_Protocol_Gray.png"
-            width={217.8}
-            height={18.4}
-            alt="Story Protocol"
-          /></div>
-          <div style={{ padding: "5px"}}>
-          <Image
-            src="/full-near-logo.png"
-            width={87.5}
-            height={22.05 }  
-            alt="Near"
-          /></div>
-          <Image
-            src="/MetaMask.svg"
-            width={153.6}
-            height={86.4}  
-            alt="MetaMask"
-          />
+            <Image
+              src="/Story_Protocol_Gray.png"
+              width={217.8}
+              height={18.4}
+              alt="Story Protocol"
+            /></div>
+          <div style={{ padding: "5px", marginTop: "-5px"}}>
+            <Image
+              src="/full-near-logo.png"
+              width={87.5}
+              height={22.05 }  
+              alt="Near"
+            /></div>
+          <div style={{ marginTop: "-30px"}}>
+            <Image
+              src="/MetaMask.svg"
+              width={153.6}
+              height={86.4}  
+              alt="MetaMask"
+            />
+            </div>
         </div>
         <div style={{ textAlign: "left"}}>
           <Image
@@ -399,14 +401,14 @@ export default function SDKContainer() {
             <NftCreator
             abi={contract}
             connected = {connected}
-            contractAddress={"0x25E07C738b79aC558A1CF7282F93b04E5516d247"}
+            contractAddress={"0xeE2ed3c2C51497dcb47f9AFFcf69d573E3198CCf"}
           />
           </TabPanel>
           <TabPanel>
             <ContentCreator
-            abi={contract}
+            abi={contract.abi}
             connected = {connected}
-            contractAddress={"0x25E07C738b79aC558A1CF7282F93b04E5516d247"}
+            contractAddress={"0xeE2ed3c2C51497dcb47f9AFFcf69d573E3198CCf"}
           />
           </TabPanel>
         </Tabs>

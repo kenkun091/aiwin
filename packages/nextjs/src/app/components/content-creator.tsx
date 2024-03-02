@@ -32,8 +32,7 @@ export default function ContentCreator({ contractAddress, abi, connected,  }: { 
     return (
       !jsonFile ||
       !docName ||
-      !docDescription ||
-      !IpLicense
+      !docDescription
     );
   };
 

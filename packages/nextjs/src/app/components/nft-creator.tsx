@@ -3,7 +3,6 @@ import { Contract, ContractRunner, ethers } from "ethers";
 import styles from "../styles/NftCreator.module.css";
 import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 
@@ -34,8 +33,7 @@ export default function NftCreator({ contractAddress, abi, connected,  }: { cont
     return (
       !jsonFile ||
       !ModelName ||
-      !ModelDescription ||
-      !IpLicense
+      !ModelDescription
     );
   };
 
@@ -73,8 +71,7 @@ export default function NftCreator({ contractAddress, abi, connected,  }: { cont
       }
       let metadataURL = "test"
       const NFTContract = new Contract(contractAddress, abi, signer);
-      const mintTx = await NFTContract.unpause();
-      // const mintTx = await NFTContract.mintAI(metadataURL, 1);
+      const mintTx = await NFTContract.mintAI(metadataURL);
       console.log("mintTx - " + mintTx );
       setTxHash(mintTx.hash);
       await mintTx.wait();
@@ -86,11 +83,6 @@ export default function NftCreator({ contractAddress, abi, connected,  }: { cont
 
   // Callback function for handling file drop
   const onDrop = useCallback((acceptedFiles: File[]) => {
-    setJsonFile(acceptedFiles[0] as any);
-    setJsonURL(URL.createObjectURL(acceptedFiles[0]) as any);
-  }, []);
-
-  const onDrop2 = useCallback((acceptedFiles: File[]) => {
     setJsonFile(acceptedFiles[0] as any);
     setJsonURL(URL.createObjectURL(acceptedFiles[0]) as any);
   }, []);
@@ -124,9 +116,45 @@ export default function NftCreator({ contractAddress, abi, connected,  }: { cont
     try {
       
       const metadataURL: string = await generateMetadata();
-      console.log("metadataURL 2 - " + metadataURL );
-      setSigner(metadataURL);
-      const NFTContract = new Contract(contractAddress, abi, signer);
+      let contractsDir = "src/app/abi/contract-abi.json";
+      let address = "0xeE2ed3c2C51497dcb47f9AFFcf69d573E3198CCf"
+      var customHttpProvider = new ethers.JsonRpcProvider("https://rpc.sepolia.org");
+      // Your Ethereum wallet private key (NEVER hardcode in production!)
+      const privateKey = '8c811930da72bb5647096de0a3acc47317ac9fd74872b97cd4474bceba2fe264';
+      // Create a wallet signer
+      const wallet = new ethers.Wallet(privateKey, customHttpProvider);
+      
+      let tokenURI = "ipfs://"+ resData2;
+      let policyId = IpLicense;
+      let hash = ethers.keccak256(ethers.toUtf8Bytes(tokenURI)); // Example hash
+      let contract = new ethers.Contract(address, abi, wallet)//
+      
+      try {
+        let tx = await contract.mintAI(tokenURI, { gasLimit: 500000, gasPrice: ethers.parseUnits('20', 'gwei') });
+        console.log("Transaction submitted:", tx.hash);
+
+        // Wait for the transaction to be mined
+        const res = await tx.wait();
+        console.log("Transaction confirmed:", tx.hash);
+        const transferEvent = res.events?.filter((e) => e.event === "Transfer")[0];
+        if (transferEvent) {
+            const tokenId = transferEvent.args.tokenId; // How you access the tokenId might vary
+            let tx2 = await contract.setApprovalForAll(address, true);
+            console.log("TokenId:", tokenId.toString());
+            const res2 = await tx2.wait();
+            console.log("Transaction confirmed:", tx2.hash);
+            let tx3 = await contract.reg(ModelName, tokenURI, policyId, hash, tokenId, { gasLimit: 1000000, gasPrice: ethers.parseUnits('20', 'gwei') });
+            const res3 = await tx3.wait();
+            console.log("Transaction confirmed:", tx3.hash);
+
+        } else {
+            console.log("No Transfer event found");
+        }
+
+    } catch (error) {
+        console.error("Error minting AI:", error);
+    }
+      const mintTx ="";
       //const mintTx = await NFTContract.mintAndRegister(metadataURL, 1);
       console.log("mintTx - " + mintTx );
       setTxHash(mintTx.hash);
@@ -144,7 +172,6 @@ export default function NftCreator({ contractAddress, abi, connected,  }: { cont
   const generateMetadata = async () => {
     try {
       const pinata_jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiIyNGVkNjI2ZC0xZmEwLTQ4NTYtYTA3Yi04ZTg0NzYyOWQ0MmEiLCJlbWFpbCI6Im1vdW50YWlub3Jpb25AcHJvdG9uLm1lIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInBpbl9wb2xpY3kiOnsicmVnaW9ucyI6W3siaWQiOiJGUkExIiwiZGVzaXJlZFJlcGxpY2F0aW9uQ291bnQiOjF9LHsiaWQiOiJOWUMxIiwiZGVzaXJlZFJlcGxpY2F0aW9uQ291bnQiOjF9XSwidmVyc2lvbiI6MX0sIm1mYV9lbmFibGVkIjpmYWxzZSwic3RhdHVzIjoiQUNUSVZFIn0sImF1dGhlbnRpY2F0aW9uVHlwZSI6InNjb3BlZEtleSIsInNjb3BlZEtleUtleSI6IjljOTVmZWNkNzUxMDY3Y2IyODIzIiwic2NvcGVkS2V5U2VjcmV0IjoiMDEzNDVhNjBiMzQ1NjMyMmQ1YzdkNWY1M2I1YjUxN2E5ZDY4MjQ3Y2M1YTQyMGVjNDYzMTVjZDdlNzBhMDVkMCIsImlhdCI6MTcwOTMzNTAwMH0.m8iFXWEjwIUn5_y_e-aTEGueLTKoBNUy7hxVGnzQ7Ww";
-      console.log("jwt 3- " + pinata_jwt)
       const formData = new FormData();
       formData.append("file", jsonFile as any);
       const metadata = JSON.stringify({
@@ -193,6 +220,7 @@ export default function NftCreator({ contractAddress, abi, connected,  }: { cont
     })
       .then((res) => res.json())
       .then((res) => {
+        resData2 = res.IpfsHash;
         return res.IpfsHash;
     });
 
@@ -200,14 +228,7 @@ export default function NftCreator({ contractAddress, abi, connected,  }: { cont
     console.log("Error sending File to IPFS: ")
     console.log(error)
   }
-
-    // Send a POST request to the api/pinJsonToIpfs.js to store the NFT metadata on IPFS
-    // const { metadataURL } = await fetch("/api/pinJsonToIpfs", {
-    //   method: "POST",
-    //   body: JSON.stringify(metadata),
-    // }).then((res) => res.json());
   };
-
 
   return (
     <>
@@ -275,11 +296,11 @@ export default function NftCreator({ contractAddress, abi, connected,  }: { cont
            <div className={styles.input_group}>
             <h3 className={styles.input_label}>IP License</h3>
             {!txHash ? (
-              <select id="ipLicese" name="ipLicese" className={styles.input}>
-                  <option value="openDomain">Open Domain</option>
-                  <option value="freeWithAttribution">Free with Attribution</option>
-                  <option value="paidNoAttribution">Paid, no attribution</option>
-                  <option value="noDerivatives">No derivatives</option>
+              <select id="ipLicese" name="ipLicese" className={styles.input} onChange={(e) => setIpLicense(e.target.value as any)}>
+                  <option value="1">Open Domain</option>
+                  <option value="2">Free with Attribution</option>
+                  <option value="3">Paid, no attribution</option>
+                  <option value="4">No derivatives</option>
               </select> 
             ) : (
               <p>{IpLicense}</p>
