@@ -11,23 +11,25 @@ import {Metadata} from "@story-protocol/protocol-periphery/contracts/lib/Metadat
 import {ILicensingModule} from "@story-protocol/protocol-core/contracts/modules/licensing/LicensingModule.sol";
 import {StoryProtocolGateway} from "@story-protocol/protocol-periphery/contracts/StoryProtocolGateway.sol";
 import {PILPolicy} from "@story-protocol/protocol-core/contracts/modules/licensing/PILPolicyFrameworkManager.sol";
-
+import {RegistrationModule} from "@story-protocol/protocol-core/contracts/modules/RegistrationModule.sol";
 contract GameItem is ERC721URIStorage {
     address public ROYALTY_POLICY;
     uint256 public MINTING_FEE;
     address public MINTING_FEE_TOKEN;
     IPAssetRegistry public ipAssetRegistry;
+    RegistrationModule public registerationModule;
     StoryProtocolGateway public spg;
 
     uint256 public tokenID;
 
 
-    constructor(address royaltyPolicy, uint256 mintingFee, address mintingFeeToken, address ipAssetRegistry_, address spg_) ERC721("AI Win", "AIW") {
+    constructor(address registerationModuleAddress, address royaltyPolicy, uint256 mintingFee, address mintingFeeToken, address ipAssetRegistry_, address spg_) ERC721("AI Win", "AIW") {
         ROYALTY_POLICY = royaltyPolicy;
         MINTING_FEE = mintingFee;
         MINTING_FEE_TOKEN = mintingFeeToken;
         spg = StoryProtocolGateway(spg_);
         ipAssetRegistry = IPAssetRegistry(ipAssetRegistry_);
+        registerationModule = RegistrationModule(registerationModuleAddress);
         // Approve the SPG to take actions for IPHolder
         ipAssetRegistry.setApprovalForAll(address(spg_), true);
         tokenID = 0;
@@ -36,17 +38,16 @@ contract GameItem is ERC721URIStorage {
     function mintAI(string memory name, string memory tokenURI, bytes memory licencesUsed, uint256 policyId, bytes32 hash) public {
         _safeMint(msg.sender, tokenID, licencesUsed);
         _setTokenURI(tokenID, tokenURI);
-        Metadata.Attribute[] memory attributes = new Metadata.Attribute[](1);
-        attributes[0] = Metadata.Attribute({key: "copyrightType", value: "MLmodel"});
-        Metadata.IPMetadata memory ipMetadata = Metadata.IPMetadata({
-            name: name,
-            hash: hash,
-            url: tokenURI,
-            customMetadata: attributes
-        });
-        SPG.Signature memory signature =
-            SPG.Signature({signer: address(this), deadline: block.timestamp + 1000, signature: ""});
-        address ipId = spg.registerIpWithSig(policyId, address(this), tokenID, ipMetadata, signature);
+        // Metadata.Attribute[] memory attributes = new Metadata.Attribute[](1);
+        // attributes[0] = Metadata.Attribute({key: "copyrightType", value: "MLmodel"});
+        // Metadata.IPMetadata memory ipMetadata = Metadata.IPMetadata({
+        //     name: name,
+        //     hash: hash,
+        //     url: tokenURI,
+        //     customMetadata: attributes
+        // });
+
+        address ipId = registerationModule.registerRootIp(policyId, address(this), tokenID, name, hash, tokenURI);
         tokenID += 1;
     }
 }
